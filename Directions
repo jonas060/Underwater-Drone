@@ -1,0 +1,41 @@
+# 1. Configure X11 (manual steps required)
+sudo raspi-config
+# → Go to Advanced Options → X11 → Enable X11
+# → Finish and reboot when prompted
+ 
+# 5. Update system and install OpenCV
+sudo apt update
+sudo apt full-upgrade -y
+sudo apt install python3-opencv -y
+ 
+# Verify OpenCV
+python3 -c "import cv2; print('OpenCV version:', cv2.__version__)"
+# Expected output: something like "OpenCV version: 4.6.0" or higher
+ 
+# 6. Install MediaPipe
+pip install mediapipe --break
+ 
+# Verify MediaPipe
+python3 -c "import mediapipe as mp; print('MediaPipe version:', mp.__version__)"
+ 
+# 7. Create and activate virtual environment for YOLO11 (Ultralytics)
+python3 -m venv --system-site-packages YOLO
+source YOLO/bin/activate
+ 
+# You are now inside the (YOLO) virtual environment
+# Install Ultralytics YOLO11 inside it
+pip install "numpy<2.0" ultralytics
+ 
+# Now create a Pi friendly YOLO11 model
+yolo export model=yolo11n.pt format=ncnn
+ 
+# Optional: Verify YOLO installation
+python -c "from ultralytics import YOLO; print('Ultralytics YOLO ready')"
+ 
+# When finished working with YOLO, you can deactivate with:
+# deactivate
+ 
+#Now open Thonny, and you need to point thonny to the virtual environment you 
+#just created. Open tools- options, select 'interpreter' tab, then click they Python
+#executable, selecting ... and navigate from home directory, 
+#to YOLO, to bin, and then select python
